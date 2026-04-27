@@ -1,0 +1,322 @@
+{
+  "cases": [
+    {
+      "id": "c-moacpcne",
+      "caseNumber": "CASE-001",
+      "victimName": "prathamesh",
+      "description": "hi everying find",
+      "createdAt": 1776880386122,
+      "files": [
+        {
+          "id": "f-moacpqn0",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776880404245-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776880404252,
+          "rowCount": 0
+        },
+        {
+          "path": "C:\\Users\\Lenovo\\Desktop\\CDR\\backend\\server\\uploads\\1776887738704-7350344857_129358349_INC000023257509.csv",
+          "name": "7350344857_129358349_INC000023257509.csv"
+        }
+      ],
+      "actions": [
+        {
+          "type": "created",
+          "at": 1776880386122
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776880404252
+        }
+      ]
+    },
+    {
+      "id": "c-moacsweq",
+      "caseNumber": "CASE-002",
+      "victimName": "prathamesh",
+      "description": "hi everying find",
+      "createdAt": 1776880551698,
+      "files": [
+        {
+          "id": "f-moacta8q",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776880569604-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776880569626,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moacwhje",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776880719044-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776880719050,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moaczru7",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776880872360-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776880872367,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moad0anw",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776880896758-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776880896764,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moad2uhs",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881015769-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881015776,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadm9rr",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881922034-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881922039,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmbgf",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881924214-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881924223,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmck4",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881925643-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881925652,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmdu3",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881927300-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881927307,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmdyt",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881927470-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881927477,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadme4s",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881927687-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881927692,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmj8v",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881934313-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881934319,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmua8",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881948615-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881948624,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmv3a",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881949666-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881949670,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmvho",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881950184-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881950188,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmvnk",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881950394-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881950400,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmvsr",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881950581-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881950587,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadmvyn",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881950794-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881950799,
+          "rowCount": 0
+        },
+        {
+          "id": "f-moadn6ub",
+          "originalName": "7350344857_129358349_INC000023257509.csv",
+          "size": 1282874,
+          "path": "uploads\\1776881964893-7350344857_129358349_INC000023257509.csv",
+          "uploadedAt": 1776881964899,
+          "rowCount": 0
+        }
+      ],
+      "actions": [
+        {
+          "type": "created",
+          "at": 1776880551698
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776880569626
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776880719050
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776880872367
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776880896764
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881015776
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881922039
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881924223
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881925652
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881927307
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881927477
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881927692
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881934319
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881948624
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881949670
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881950188
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881950400
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881950587
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881950799
+        },
+        {
+          "type": "file-uploaded",
+          "file": "7350344857_129358349_INC000023257509.csv",
+          "at": 1776881964899
+        }
+      ]
+    },
+    {
+      "id": "c-1776887723031",
+      "caseNumber": "asd",
+      "files": [],
+      "analysis": []
+    },
+    {
+      "id": "c-1776887835423",
+      "caseNumber": "dsd",
+      "files": [],
+      "analysis": []
+    },
+    {
+      "id": "c-1776888281304",
+      "caseNumber": "dsd",
+      "files": [],
+      "analysis": []
+    },
+    {
+      "id": "c-1776889508208",
+      "caseNumber": "df",
+      "files": [],
+      "analysis": []
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceNova | Cases</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    :root { --bg:#050810;--bg2:#0a0f1e;--surface:#111827;--surface2:#1a2235;--border:rgba(0,255,180,0.12);--border-glow:rgba(0,255,180,0.35);--accent:#00ffb4;--accent2:#00c8ff;--text:#e8f0fe;--muted:#6b7a99;--danger:#ff4f7b;--warn:#ffb347;--font-mono:'Space Mono',monospace;--font-body:'DM Sans',sans-serif; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,255,180,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,180,0.03) 1px,transparent 1px);background-size:40px 40px}
+    nav{position:sticky;top:0;z-index:100;height:68px;background:rgba(5,8,16,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between}
+    .logo-text{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--accent);letter-spacing:3px;text-shadow:0 0 20px rgba(0,255,180,0.5)}
+    .logo-badge{font-size:0.65rem;font-family:var(--font-mono);color:var(--accent2);background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);padding:3px 10px;border-radius:3px;letter-spacing:1.5px}
+    .nav-links{display:flex;align-items:center;gap:2rem}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;font-weight:500;transition:color 0.2s;display:flex;align-items:center;gap:6px}
+    .nav-links a:hover,.nav-links a.active{color:var(--accent)}
+    #userName{font-size:0.85rem;color:var(--accent);display:flex;align-items:center;gap:6px}
+    .btn-logout{background:transparent;border:1px solid rgba(255,79,123,0.3);color:var(--danger);padding:7px 18px;border-radius:6px;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;font-family:var(--font-body)}
+    .btn-logout:hover{background:rgba(255,79,123,0.1);border-color:var(--danger)}
+    main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:3rem 2.5rem}
+    .page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem}
+    .page-title{font-family:var(--font-mono);font-size:2rem;font-weight:700;color:var(--accent)}
+    .page-subtitle{color:var(--muted);font-size:0.875rem;margin-top:4px}
+    .btn-new{background:var(--accent);color:#050810;border:none;padding:10px 22px;border-radius:8px;font-family:var(--font-mono);font-size:0.8rem;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s}
+    .btn-new:hover{background:#00e6a0;box-shadow:0 0 20px rgba(0,255,180,0.3)}
+    .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    table{width:100%;border-collapse:collapse;font-size:0.875rem}
+    thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+    th{padding:1rem 1.25rem;text-align:left;font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+    tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(0,255,180,0.04)}
+    td{padding:1rem 1.25rem;color:var(--text);vertical-align:middle}
+    .td-case{font-family:var(--font-mono);font-size:0.82rem;color:var(--accent2)}
+    .td-muted{color:var(--muted);font-size:0.82rem}
+    .badge-files{background:rgba(0,200,255,0.1);color:var(--accent2);border:1px solid rgba(0,200,255,0.2);padding:2px 10px;border-radius:4px;font-family:var(--font-mono);font-size:0.65rem}
+    .btn-open{background:transparent;border:1px solid var(--border);color:var(--accent);padding:6px 16px;border-radius:6px;font-size:0.8rem;font-family:var(--font-mono);cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+    .btn-open:hover{border-color:var(--accent);background:rgba(0,255,180,0.05)}
+    .btn-delete{background:transparent;border:1px solid rgba(255,79,123,0.2);color:var(--danger);padding:6px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;transition:all 0.2s;margin-left:6px}
+    .btn-delete:hover{background:rgba(255,79,123,0.1)}
+    .empty-row td{text-align:center;padding:3rem;color:var(--muted);font-family:var(--font-mono);font-size:0.8rem}
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--surface);border:1px solid var(--border-glow);border-radius:16px;width:500px;max-width:95vw;padding:2rem}
+    .modal-title{font-family:var(--font-mono);font-size:1rem;color:var(--accent);margin-bottom:1.5rem}
+    .form-group{margin-bottom:1rem}
+    .form-group label{display:block;font-size:0.75rem;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .form-group input,.form-group textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-family:var(--font-body);font-size:0.875rem;outline:none;transition:border-color 0.2s}
+    .form-group input:focus,.form-group textarea:focus{border-color:var(--border-glow)}
+    .form-group textarea{resize:vertical;min-height:80px}
+    .upload-zone{margin-top:1rem;padding:1rem;background:var(--bg2);border:1px dashed var(--border);border-radius:8px}
+    .upload-zone-label{font-size:0.75rem;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:block}
+    .file-pick-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--accent2);padding:8px 14px;border-radius:6px;font-size:0.8rem;cursor:pointer;transition:all 0.2s}
+    .file-pick-btn:hover{border-color:var(--accent2)}
+    #fileStatus{font-size:0.75rem;color:var(--muted);margin-top:8px}
+    .modal-actions{display:flex;gap:10px;margin-top:1.5rem;justify-content:flex-end}
+    .btn-cancel{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 20px;border-radius:8px;font-size:0.875rem;cursor:pointer;font-family:var(--font-body)}
+    .btn-create{background:var(--accent);color:#050810;border:none;padding:9px 20px;border-radius:8px;font-family:var(--font-mono);font-size:0.8rem;font-weight:700;letter-spacing:1px;cursor:pointer}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-thumb{background:var(--border-glow);border-radius:3px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:14px">
+    <span class="logo-text">TRACENOVA</span>
+    <span class="logo-badge">Cases</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-shield-alt"></i> IP Intel</a>
+    <a href="cases.html" class="active"><i class="fas fa-folder-open"></i> Cases</a>
+    <a href="analysis.html"><i class="fas fa-chart-bar"></i> CDR Analysis</a>
+    <div style="width:1px;height:24px;background:var(--border)"></div>
+    <span id="userName"></span>
+    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div>
+      <div class="page-title">All Cases</div>
+      <div class="page-subtitle">Forensic investigation case management</div>
+    </div>
+    <button class="btn-new" onclick="openModal()"><i class="fas fa-plus"></i> New Case</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Case Number</th><th>Victim</th><th>Description</th><th>Created</th><th>Files</th><th>Actions</th></tr></thead>
+      <tbody id="casesTable"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-title"><i class="fas fa-folder-plus"></i> Create New Case</div>
+    <div class="form-group"><label>Case Number *</label><input type="text" id="inCaseNo" placeholder="e.g. CASE-2026-001"></div>
+    <div class="form-group"><label>Victim Name</label><input type="text" id="inVictim" placeholder="Victim / suspect name"></div>
+    <div class="form-group"><label>Description</label><textarea id="inDesc" placeholder="Brief case description"></textarea></div>
+    <div class="upload-zone">
+      <span class="upload-zone-label"><i class="fas fa-paperclip"></i> Attach CDR File (optional)</span>
+      <label class="file-pick-btn">
+        <i class="fas fa-upload"></i> Choose CSV / TXT
+        <input type="file" id="fileInput" accept=".csv,.txt" style="display:none" onchange="onFileSelected(event)">
+      </label>
+      <div id="fileStatus">No file selected</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-create" onclick="createCase()"><i class="fas fa-check"></i> Create Case</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'http://localhost:3001';
+  let pickedFile = null;
+
+  function tok() { return localStorage.getItem('token'); }
+
+  function checkAuth() {
+    if (!tok()) return window.location.href = 'login.html';
+    try {
+      const u = JSON.parse(localStorage.getItem('user') || '{}');
+      document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${u.fullName || u.username || 'User'}`;
+    } catch {}
+  }
+
+  function logout() {
+    if (confirm('Logout?')) { localStorage.clear(); window.location.href = 'login.html'; }
+  }
+
+  async function loadCases() {
+    try {
+      const r = await fetch(`${API}/api/cases`, { headers: { 'Authorization': `Bearer ${tok()}` } });
+      if (r.status === 401 || r.status === 403) { localStorage.clear(); return window.location.href = 'login.html'; }
+      renderCases(await r.json());
+    } catch {
+      document.getElementById('casesTable').innerHTML = `<tr class="empty-row"><td colspan="6">Backend se connect nahi ho raha</td></tr>`;
+    }
+  }
+
+  function renderCases(list) {
+    const tb = document.getElementById('casesTable');
+    if (!list.length) { tb.innerHTML = `<tr class="empty-row"><td colspan="6">Koi case nahi — pehla case banao!</td></tr>`; return; }
+    tb.innerHTML = '';
+    list.forEach(c => {
+      const date = c.createdAt ? new Date(c.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+      const desc = c.description ? c.description.substring(0,55) + (c.description.length>55?'…':'') : '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-case">${c.caseNumber||'—'}</td>
+        <td>${c.victimName||'—'}</td>
+        <td class="td-muted">${desc}</td>
+        <td class="td-muted">${date}</td>
+        <td><span class="badge-files">${(c.files||[]).length} files</span></td>
+        <td>
+          <a href="analysis.html?id=${c.id}" class="btn-open">Open →</a>
+          <button class="btn-delete" onclick="delCase('${c.id}',event)"><i class="fas fa-trash"></i></button>
+        </td>`;
+      tb.appendChild(tr);
+    });
+  }
+
+  async function delCase(id, e) {
+    e.stopPropagation();
+    if (!confirm('Delete this case?')) return;
+    await fetch(`${API}/api/cases/${id}`, { method:'DELETE', headers:{'Authorization':`Bearer ${tok()}`} });
+    loadCases();
+  }
+
+  function openModal() {
+    ['inCaseNo','inVictim','inDesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fileStatus').textContent = 'No file selected';
+    pickedFile = null;
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+  function bgClose(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+  function onFileSelected(e) {
+    pickedFile = e.target.files[0];
+    document.getElementById('fileStatus').textContent = pickedFile
+      ? `✅ ${pickedFile.name} (${Math.round(pickedFile.size/1024)} KB)`
+      : 'No file selected';
+  }
+
+  async function createCase() {
+    const caseNumber = document.getElementById('inCaseNo').value.trim();
+    if (!caseNumber) { alert('Case number daalna zaroori hai!'); return; }
+
+    try {
+      const r = await fetch(`${API}/api/cases`, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${tok()}` },
+        body: JSON.stringify({
+          caseNumber,
+          victimName:  document.getElementById('inVictim').value.trim(),
+          description: document.getElementById('inDesc').value.trim()
+        })
+      });
+      if (!r.ok) { alert('Case create failed'); return; }
+      const nc = await r.json();
+
+      // Upload file to server uploads folder
+      if (pickedFile) {
+        const fd = new FormData();
+        fd.append('file', pickedFile);
+        const ur = await fetch(`${API}/api/cases/${nc.id}/files`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${tok()}` },
+          body: fd
+        });
+        if (ur.ok) {
+          const udata = await ur.json();
+          console.log('✅ File uploaded to uploads folder:', udata.file?.storedName);
+        } else {
+          const err = await ur.text();
+          console.error('Upload failed:', err);
+          alert(`Case bana gaya ✅ lekin file upload failed: ${err}`);
+        }
+      }
+
+      closeModal();
+      loadCases();
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  window.onload = () => { checkAuth(); loadCases(); };
+</script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceNova | IP & Website Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    :root{--bg:#050810;--bg2:#0a0f1e;--surface:#111827;--surface2:#1a2235;--border:rgba(0,255,180,0.12);--border-glow:rgba(0,255,180,0.35);--accent:#00ffb4;--accent2:#00c8ff;--text:#e8f0fe;--muted:#6b7a99;--danger:#ff4f7b;--warn:#ffb347;--safe:#00ffb4;--font-mono:'Space Mono',monospace;--font-body:'DM Sans',sans-serif}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,180,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,180,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+    nav{position:sticky;top:0;z-index:100;background:rgba(5,8,16,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 2.5rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .logo-text{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--accent);letter-spacing:3px;text-shadow:0 0 20px rgba(0,255,180,0.5)}
+    .logo-badge{font-size:0.65rem;font-family:var(--font-mono);color:var(--accent2);background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);padding:3px 10px;border-radius:3px;letter-spacing:1.5px}
+    .nav-links{display:flex;align-items:center;gap:2rem}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;transition:color .2s;display:flex;align-items:center;gap:6px}
+    .nav-links a:hover{color:var(--accent)}
+    .nav-divider{width:1px;height:24px;background:var(--border)}
+    #userName{font-size:.85rem;color:var(--accent);display:flex;align-items:center;gap:6px}
+    .btn-logout{background:transparent;border:1px solid rgba(255,79,123,0.3);color:var(--danger);padding:7px 18px;border-radius:6px;font-size:.8rem;font-family:var(--font-body);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+    .btn-logout:hover{background:rgba(255,79,123,0.1);border-color:var(--danger)}
+    main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:3rem 2.5rem 4rem}
+    .hero{margin-bottom:2.5rem}
+    .hero-tag{font-family:var(--font-mono);font-size:.7rem;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+    .hero-tag::before{content:'';width:20px;height:1px;background:var(--accent)}
+    .hero h1{font-family:var(--font-mono);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;color:var(--text);margin-bottom:.75rem}
+    .hero h1 span{color:var(--accent);text-shadow:0 0 30px rgba(0,255,180,0.4)}
+    .hero-sub{font-size:1rem;color:var(--muted);display:flex;align-items:center;gap:12px}
+    .hero-sub::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2rem}
+    .stat-cell{background:var(--surface);padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:4px}
+    .stat-label{font-size:.7rem;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .stat-val{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--text)}
+    .stat-val.green{color:var(--safe);text-shadow:0 0 15px rgba(0,255,180,0.3)}
+    .stat-val.red{color:var(--danger)}
+    .stat-val.warn{color:var(--warn)}
+    /* TABS */
+    .tab-bar{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px}
+    .tab-btn{flex:1;padding:12px 16px;border:none;border-radius:8px;font-family:var(--font-mono);font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px}
+    .tab-btn.active{background:var(--accent);color:#050810}
+    .tab-btn:not(.active):hover{color:var(--accent)}
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+    /* PANELS */
+    .scan-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:2rem}
+    .panel-header{background:var(--surface2);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;gap:10px}
+    .panel-dot{width:8px;height:8px;border-radius:50%}
+    .panel-dot.red{background:#ff5f57}
+    .panel-dot.yellow{background:#febc2e}
+    .panel-dot.green{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+    .panel-title{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-left:4px;letter-spacing:1px}
+    .panel-body{padding:1.5rem}
+    textarea#ipInput{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:1rem 1.25rem;border-radius:10px;font-family:var(--font-mono);font-size:.85rem;resize:vertical;min-height:130px;outline:none;transition:border-color .2s;line-height:1.8}
+    textarea#ipInput::placeholder{color:var(--muted)}
+    textarea#ipInput:focus{border-color:var(--border-glow)}
+    input#webInput{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:14px 1.25rem;border-radius:10px;font-family:var(--font-mono);font-size:.9rem;outline:none;transition:border-color .2s}
+    input#webInput::placeholder{color:var(--muted)}
+    input#webInput:focus{border-color:var(--border-glow)}
+    .scan-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;margin-bottom:1rem}
+    .scan-opt{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);cursor:pointer;padding:6px 14px;border:1px solid var(--border);border-radius:6px;transition:all .2s;user-select:none}
+    .scan-opt input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px}
+    .scan-opt.checked{border-color:var(--accent);color:var(--accent);background:rgba(0,255,180,0.05)}
+    .action-row{display:flex;gap:12px;margin-top:1rem}
+    .btn-upload{flex:0 0 auto;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0 1.5rem;height:50px;border-radius:10px;font-family:var(--font-body);font-size:.875rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;white-space:nowrap}
+    .btn-upload:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-scan{flex:1;background:var(--accent);color:#050810;border:none;height:50px;border-radius:10px;font-family:var(--font-mono);font-size:.875rem;font-weight:700;letter-spacing:1.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;text-transform:uppercase}
+    .btn-scan:hover{background:#00e6a0;box-shadow:0 0 30px rgba(0,255,180,0.3);transform:translateY(-1px)}
+    .btn-scan.purple{background:linear-gradient(135deg,#7c4dff,#00c8ff);color:#fff}
+    .btn-scan.purple:hover{box-shadow:0 0 30px rgba(124,77,255,0.4);transform:translateY(-1px)}
+    /* RESULTS */
+    .results-section{display:none}
+    .results-section.visible{display:block}
+    .results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .results-title{font-family:var(--font-mono);font-size:.75rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+    .results-title::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent)}
+    .btn-export{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;font-size:.75rem;font-family:var(--font-mono);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+    .btn-export:hover{color:var(--accent);border-color:var(--border-glow)}
+    .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    table{width:100%;border-collapse:collapse;font-size:.85rem}
+    thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+    th{padding:.9rem 1.1rem;text-align:left;font-family:var(--font-mono);font-size:.65rem;font-weight:400;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap}
+    th.center{text-align:center}
+    tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;cursor:pointer}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(0,255,180,0.04)}
+    td{padding:.9rem 1.1rem;color:var(--text);vertical-align:middle}
+    td.center{text-align:center}
+    .td-ip{font-family:var(--font-mono);font-size:.82rem;color:var(--accent2)}
+    .td-isp{color:var(--muted);font-size:.82rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .badge{display:inline-flex;align-items:center;padding:3px 12px;border-radius:4px;font-family:var(--font-mono);font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+    .badge-high{background:rgba(255,79,123,0.15);color:var(--danger);border:1px solid rgba(255,79,123,0.3)}
+    .badge-medium{background:rgba(255,179,71,0.12);color:var(--warn);border:1px solid rgba(255,179,71,0.25)}
+    .badge-low{background:rgba(0,255,180,0.08);color:var(--safe);border:1px solid rgba(0,255,180,0.2)}
+    .score-bar{display:flex;align-items:center;gap:8px}
+    .score-track{width:60px;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden}
+    .score-fill{height:100%;border-radius:2px;transition:width .4s ease}
+    .loading-row td{text-align:center;padding:3rem;color:var(--accent);font-family:var(--font-mono);font-size:.85rem;letter-spacing:1px}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,255,180,0.3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    /* WEB RESULTS */
+    .web-results{display:none;margin-top:2rem}
+    .web-results.visible{display:block}
+    .web-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem}
+    .web-section-head{background:var(--surface2);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    .web-section-title{font-family:var(--font-mono);font-size:.75rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+    .web-section-count{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);background:rgba(255,255,255,0.05);padding:2px 10px;border-radius:10px}
+    .web-section-body{padding:1rem 1.5rem}
+    .ip-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--border)}
+    .ip-info-cell{background:var(--surface);padding:1rem;display:flex;flex-direction:column;gap:4px}
+    .ip-info-label{font-size:.65rem;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .ip-info-val{font-size:.9rem;color:var(--text);font-weight:500;word-break:break-all}
+    .ip-info-val.accent{color:var(--accent);font-family:var(--font-mono)}
+    .ip-info-val.accent2{color:var(--accent2);font-family:var(--font-mono)}
+    .chip-wrap{display:flex;flex-wrap:wrap;gap:8px;padding:1rem 1.5rem}
+    .chip{font-family:var(--font-mono);font-size:.72rem;padding:4px 12px;border-radius:4px;border:1px solid var(--border);color:var(--text);background:var(--bg2);cursor:default;transition:all .15s}
+    .chip:hover{border-color:var(--border-glow)}
+    .chip.sub{border-color:rgba(0,200,255,0.2);color:var(--accent2)}
+    .chip.param{border-color:rgba(255,179,71,0.2);color:var(--warn)}
+    .chip.tech{border-color:rgba(124,77,255,0.3);color:#b89aff}
+    .chip.port-open{border-color:rgba(0,255,180,0.3);color:var(--safe)}
+    .chip.port-unknown{border-color:rgba(255,255,255,0.08);color:var(--muted)}
+    .progress-wrap{padding:2rem;text-align:center}
+    .progress-label{font-family:var(--font-mono);font-size:.8rem;color:var(--accent);margin-bottom:1rem;letter-spacing:1px}
+    .progress-track{width:100%;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-bottom:8px}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s}
+    .progress-steps{font-size:.75rem;color:var(--muted);font-family:var(--font-mono)}
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--surface);border:1px solid var(--border-glow);border-radius:18px;width:560px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 0 60px rgba(0,255,180,0.08)}
+    .modal-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .modal-ip{font-family:var(--font-mono);font-size:1.1rem;color:var(--accent)}
+    .btn-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px;transition:color .2s}
+    .btn-close:hover{color:var(--text)}
+    .modal-body{padding:1.5rem;display:flex;flex-direction:column}
+    .detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,0.05);gap:1rem}
+    .detail-row:last-child{border-bottom:none}
+    .detail-key{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;flex-shrink:0}
+    .detail-val{font-size:.875rem;color:var(--text);text-align:right;word-break:break-all}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-thumb{background:var(--border-glow);border-radius:3px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:14px">
+    <span class="logo-text">TRACENOVA</span>
+    <span class="logo-badge">Threat Intel v3.0</span>
+  </div>
+  <div class="nav-links">
+    <a href="cases.html"><i class="fas fa-folder-open"></i> Cases</a>
+    <a href="analysis.html"><i class="fas fa-chart-bar"></i> CDR Analysis</a>
+    <div class="nav-divider"></div>
+    <span id="userName"></span>
+    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="hero-tag">Real-time Forensic Analysis</div>
+    <h1>Advanced<br><span>Threat Intelligence</span></h1>
+    <p class="hero-sub">IP Scanner + Website Recon + AbuseIPDB — Live</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-cell"><span class="stat-label">IPs Scanned</span><span class="stat-val green" id="statTotal">0</span></div>
+    <div class="stat-cell"><span class="stat-label">High Risk</span><span class="stat-val red" id="statHigh">0</span></div>
+    <div class="stat-cell"><span class="stat-label">Medium</span><span class="stat-val warn" id="statMedium">0</span></div>
+    <div class="stat-cell"><span class="stat-label">Clean</span><span class="stat-val green" id="statLow">0</span></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabBtnIP" onclick="switchTab('ip',this)">
+      <i class="fas fa-network-wired"></i> IP Scanner
+    </button>
+    <button class="tab-btn" id="tabBtnWeb" onclick="switchTab('web',this)">
+      <i class="fas fa-globe"></i> Website Scanner
+    </button>
+  </div>
+
+  <!-- ===== TAB 1: IP SCANNER ===== -->
+  <div class="tab-content active" id="tab-ip">
+    <div class="scan-panel">
+      <div class="panel-header">
+        <div class="panel-dot red"></div><div class="panel-dot yellow"></div><div class="panel-dot green"></div>
+        <span class="panel-title">ip_input.terminal</span>
+      </div>
+      <div class="panel-body">
+        <textarea id="ipInput" rows="5" placeholder="IPs paste karo — ek line mein ek IP&#10;192.168.1.1&#10;8.8.8.8&#10;106.210.184.137"></textarea>
+        <div class="action-row">
+          <button class="btn-upload" onclick="uploadFile()"><i class="fas fa-upload"></i> CSV / TXT Upload</button>
+          <button class="btn-scan" onclick="runAdvancedScan()"><i class="fas fa-bolt"></i> Run Forensic Scan</button>
+        </div>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept=".csv,.txt" style="display:none" onchange="handleFileSelect(event)">
+
+    <div id="resultsSection" class="results-section">
+      <div class="results-header">
+        <span class="results-title">Forensic Intelligence Results</span>
+        <button class="btn-export" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>IP Address</th><th>Version</th><th>Country</th><th>City</th>
+            <th>ISP / Org</th><th class="center">Abuse Score</th><th class="center">Risk Level</th><th class="center">Reports</th>
+          </tr></thead>
+          <tbody id="resultsTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 2: WEBSITE SCANNER ===== -->
+  <div class="tab-content" id="tab-web">
+    <div class="scan-panel">
+      <div class="panel-header">
+        <div class="panel-dot red"></div><div class="panel-dot yellow"></div><div class="panel-dot green"></div>
+        <span class="panel-title">website_recon.terminal</span>
+      </div>
+      <div class="panel-body">
+        <input type="text" id="webInput" placeholder="Enter domain or URL — e.g. example.com or https://target.com" autocomplete="off">
+        <div class="scan-options">
+          <label class="scan-opt checked" id="opt-ip"><input type="checkbox" checked onchange="toggleOpt(this,'opt-ip')"> IP Lookup &amp; Geo</label>
+          <label class="scan-opt checked" id="opt-whois"><input type="checkbox" checked onchange="toggleOpt(this,'opt-whois')"> WHOIS Info</label>
+          <label class="scan-opt checked" id="opt-dns"><input type="checkbox" checked onchange="toggleOpt(this,'opt-dns')"> DNS Records</label>
+          <label class="scan-opt checked" id="opt-sub"><input type="checkbox" checked onchange="toggleOpt(this,'opt-sub')"> Subdomains (crt.sh)</label>
+          <label class="scan-opt checked" id="opt-param"><input type="checkbox" checked onchange="toggleOpt(this,'opt-param')"> URL Parameters (Wayback)</label>
+          <label class="scan-opt checked" id="opt-tech"><input type="checkbox" checked onchange="toggleOpt(this,'opt-tech')"> Technology Detection</label>
+          <label class="scan-opt checked" id="opt-threat"><input type="checkbox" checked onchange="toggleOpt(this,'opt-threat')"> Threat Intelligence</label>
+          <label class="scan-opt checked" id="opt-headers"><input type="checkbox" checked onchange="toggleOpt(this,'opt-headers')"> HTTP Headers &amp; Security</label>
+        </div>
+        <div class="action-row">
+          <button class="btn-scan purple" style="flex:1" onclick="runWebScan()">
+            <i class="fas fa-satellite-dish"></i> Run Full Website Recon Scan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEB RESULTS -->
+    <div class="web-results" id="webResults">
+      <div class="web-section" id="webProgress" style="display:none">
+        <div class="progress-wrap">
+          <div class="progress-label" id="progressLabel"><span class="spinner"></span> Initializing...</div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div class="progress-steps" id="progressSteps">0 / 8 steps complete</div>
+        </div>
+      </div>
+
+      <div class="web-section" id="secIPInfo" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-server"></i> IP &amp; Geo Intelligence</span><span class="web-section-count" id="cntIP">—</span></div>
+        <div class="ip-info-grid" id="ipInfoGrid"></div>
+      </div>
+
+      <div class="web-section" id="secThreat" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-shield-virus"></i> Threat Intelligence (AbuseIPDB)</span><span class="web-section-count" id="cntThreat">—</span></div>
+        <div class="ip-info-grid" id="threatGrid"></div>
+      </div>
+
+      <div class="web-section" id="secWhois" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-id-card"></i> WHOIS / RDAP Information</span></div>
+        <div class="ip-info-grid" id="whoisGrid"></div>
+      </div>
+
+      <div class="web-section" id="secDNS" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-database"></i> DNS Records</span></div>
+        <div class="web-section-body" style="font-family:var(--font-mono);font-size:.78rem;line-height:2;color:var(--muted)" id="dnsList"></div>
+      </div>
+
+      <div class="web-section" id="secSubdomains" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-sitemap"></i> Discovered Subdomains</span><span class="web-section-count" id="cntSub">0</span></div>
+        <div class="chip-wrap" id="subdomainList"></div>
+      </div>
+
+      <div class="web-section" id="secParams" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-code"></i> URL Parameters Found</span><span class="web-section-count" id="cntParam">0</span></div>
+        <div class="chip-wrap" id="paramList"></div>
+      </div>
+
+      <div class="web-section" id="secTech" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-microchip"></i> Detected Technologies</span><span class="web-section-count" id="cntTech">0</span></div>
+        <div class="chip-wrap" id="techList"></div>
+      </div>
+
+      <div class="web-section" id="secHeaders" style="display:none">
+        <div class="web-section-head"><span class="web-section-title"><i class="fas fa-exchange-alt"></i> HTTP Headers &amp; Security Posture</span></div>
+        <div class="web-section-body" id="headersList"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- IP DETAIL MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-ip" id="modalIP">—</span>
+      <button class="btn-close" onclick="document.getElementById('modalOverlay').classList.remove('open')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+let currentResults = [];
+
+function checkAuth() {
+  const t = localStorage.getItem('token'), u = localStorage.getItem('user');
+  if (!t || !u) return window.location.href = 'login.html';
+  try { const p = JSON.parse(u); document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle" style="color:var(--accent)"></i> ${p.fullName||p.username}`; } catch {}
+}
+
+function logout() { if (confirm('Logout?')) { localStorage.clear(); window.location.href = 'login.html'; } }
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function toggleOpt(cb, id) { document.getElementById(id).classList.toggle('checked', cb.checked); }
+function optOn(id) { return document.querySelector('#' + id + ' input')?.checked; }
+
+// ============ IP SCANNER ============
+async function runAdvancedScan() {
+  const input = document.getElementById('ipInput').value.trim();
+  if (!input) { alert('Koi IP nahi daala!'); return; }
+  const ips = input.split('\n').map(i => i.trim()).filter(Boolean);
+  document.getElementById('resultsSection').classList.add('visible');
+  const tbody = document.getElementById('resultsTable');
+  tbody.innerHTML = `<tr class="loading-row"><td colspan="8"><span class="spinner"></span>Running Advanced Forensic Scan...</td></tr>`;
+  updateStats([]);
+  try {
+    const res = await fetch('http://localhost:3001/api/ip-bulk', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ips })
+    });
+    const data = await res.json();
+    currentResults = data.results || [];
+    renderResults(); updateStats(currentResults);
+  } catch {
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="8" style="color:var(--danger)"><i class="fas fa-exclamation-triangle"></i> Backend connect nahi ho raha</td></tr>`;
+  }
+}
+
+function updateStats(r) {
+  document.getElementById('statTotal').textContent  = r.length;
+  document.getElementById('statHigh').textContent   = r.filter(x => (x.threat?.abuseScore||0) >= 70).length;
+  document.getElementById('statMedium').textContent = r.filter(x => { const s=x.threat?.abuseScore||0; return s>=30&&s<70; }).length;
+  document.getElementById('statLow').textContent    = r.filter(x => (x.threat?.abuseScore||0) < 30).length;
+}
+
+function renderResults() {
+  const tbody = document.getElementById('resultsTable'); tbody.innerHTML = '';
+  currentResults.forEach(item => {
+    const b=item.basic||{}, t=item.threat||{}, s=t.abuseScore||0;
+    const bc=s>=70?'badge-high':s>=30?'badge-medium':'badge-low';
+    const bl=s>=70?'HIGH RISK':s>=30?'MEDIUM':'LOW';
+    const fc=s>=70?'var(--danger)':s>=30?'var(--warn)':'var(--safe)';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="td-ip">${item.ip}</td><td>${b.type||(item.ip?.includes(':')? 'IPv6':'IPv4')}</td><td>${b.country||'—'}</td><td>${b.city||'—'}</td><td class="td-isp" title="${b.connection?.isp||'—'}">${b.connection?.isp||'—'}</td><td class="center"><div class="score-bar" style="justify-content:center"><div class="score-track"><div class="score-fill" style="width:${s}%;background:${fc}"></div></div><span style="font-family:var(--font-mono);font-size:.82rem;min-width:28px">${s}</span></div></td><td class="center"><span class="badge ${bc}">${bl}</span></td><td class="center" style="font-family:var(--font-mono);font-size:.82rem">${t.reports||0}</td>`;
+    tr.onclick=()=>showDetailModal(item); tbody.appendChild(tr);
+  });
+}
+
+function showDetailModal(item) {
+  const b=item.basic||{}, t=item.threat||{}, s=t.abuseScore||0;
+  document.getElementById('modalIP').textContent=item.ip;
+  const bc=s>=70?'badge-high':s>=30?'badge-medium':'badge-low', bl=s>=70?'HIGH RISK':s>=30?'MEDIUM':'LOW';
+  const rows=[['IP Version',b.type||(item.ip?.includes(':')? 'IPv6':'IPv4')],['Country',b.country||'—'],['City',b.city||'—'],['ISP',b.connection?.isp||'—'],['Organisation',b.connection?.org||'—'],['Domain',t.domain||'—'],['Usage Type',t.usageType||'—'],['Abuse Score',s+' / 100'],['Risk Level',`<span class="badge ${bc}">${bl}</span>`],['Total Reports',t.reports||0],['Last Reported',t.lastReported||'—'],['Whitelisted',t.isWhitelisted? 'Yes':'No']];
+  document.getElementById('modalBody').innerHTML=rows.map(([k,v])=>`<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`).join('');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(e) { if (e.target===document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open'); }
+function uploadFile() { document.getElementById('fileInput').click(); }
+function handleFileSelect(e) { const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>document.getElementById('ipInput').value=ev.target.result; r.readAsText(f); }
+function exportCSV() {
+  if (!currentResults.length) return;
+  const h=['IP','Version','Country','City','ISP','Domain','UsageType','AbuseScore','Risk','Reports'];
+  const rows=currentResults.map(i=>{ const b=i.basic||{},t=i.threat||{},s=t.abuseScore||0; return [i.ip,b.type||'',b.country||'',b.city||'',b.connection?.isp||'',t.domain||'',t.usageType||'',s,s>=70?'HIGH':s>=30?'MEDIUM':'LOW',t.reports||0].map(v=>`"${v}"`).join(','); });
+  const blob=new Blob([[h.join(','),...rows].join('\n')],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tracenova_ip.csv'; a.click();
+}
+
+// ============ WEBSITE SCANNER ============
+function showSec(id) { document.getElementById(id).style.display='block'; }
+function setProgress(pct, label, step, total) {
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').innerHTML=`<span class="spinner"></span> ${label}`;
+  document.getElementById('progressSteps').textContent=`${step} / ${total} steps complete`;
+}
+function infoGrid(cells) {
+  return cells.map(c=>`<div class="ip-info-cell"><div class="ip-info-label">${c.label}</div><div class="ip-info-val ${c.cls||''}">${c.val}</div></div>`).join('');
+}
+
+async function runWebScan() {
+  let raw = document.getElementById('webInput').value.trim();
+  if (!raw) { alert('Domain ya URL daalo!'); return; }
+  let domain;
+  try { domain = new URL(raw.startsWith('http') ? raw : 'https://'+raw).hostname; }
+  catch { domain = raw.replace(/^https?:\/\//,'').split('/')[0]; }
+
+  // Reset UI
+  document.getElementById('webResults').classList.add('visible');
+  ['secIPInfo','secThreat','secWhois','secDNS','secSubdomains','secParams','secTech','secHeaders'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  showSec('webProgress');
+
+  const TOTAL = 8; let step = 0;
+  let resolvedIP = null;
+
+  // STEP 1: IP + Geo
+  step++; setProgress(step/TOTAL*100,'Resolving IP & Geo location...',step,TOTAL);
+  if (optOn('opt-ip')) {
+    try {
+      const dr = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
+      const dd = await dr.json();
+      const allIPs = (dd.Answer||[]).filter(a=>a.type===1).map(a=>a.data);
+      resolvedIP = allIPs[0]||null;
+      let geo={};
+      if (resolvedIP) {
+        try { const gr=await fetch(`https://ipwho.is/${resolvedIP}`); if(gr.ok) geo=await gr.json(); } catch {}
+      }
+      showSec('secIPInfo');
+      document.getElementById('cntIP').textContent = resolvedIP||'—';
+      document.getElementById('ipInfoGrid').innerHTML = infoGrid([
+        {label:'Domain',val:domain,cls:'accent'},{label:'Primary IP',val:resolvedIP||'—',cls:'accent2'},
+        {label:'All IPs',val:allIPs.join(', ')||'—'},{label:'Country',val:geo.country||'—'},
+        {label:'City',val:geo.city||'—'},{label:'Region',val:geo.region||'—'},
+        {label:'ISP',val:geo.connection?.isp||geo.org||'—'},{label:'ASN',val:geo.connection?.asn?'AS'+geo.connection.asn:'—'},
+        {label:'Timezone',val:geo.timezone||'—'},{label:'Latitude',val:geo.latitude||'—'},
+        {label:'Longitude',val:geo.longitude||'—'},{label:'IP Version',val:geo.type||'—'},
+      ]);
+    } catch {}
+  }
+
+  // STEP 2: Threat Intel
+  step++; setProgress(step/TOTAL*100,'Checking AbuseIPDB threat intelligence...',step,TOTAL);
+  if (optOn('opt-threat') && resolvedIP) {
+    try {
+      const res = await fetch('http://localhost:3001/api/ip-bulk', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ips:[resolvedIP]})
+      });
+      const data = await res.json();
+      const r = data.results?.[0];
+      if (r) {
+        const t=r.threat||{}, s=t.abuseScore||0;
+        const bc=s>=70?'badge-high':s>=30?'badge-medium':'badge-low';
+        const bl=s>=70?'HIGH RISK':s>=30?'MEDIUM':'LOW';
+        showSec('secThreat');
+        document.getElementById('cntThreat').innerHTML=`<span class="badge ${bc}">${bl}</span>`;
+        document.getElementById('threatGrid').innerHTML=infoGrid([
+          {label:'Abuse Score',val:s+' / 100'},{label:'Reports',val:t.reports||0},
+          {label:'Last Reported',val:t.lastReported||'—'},{label:'Usage Type',val:t.usageType||'—'},
+          {label:'Domain',val:t.domain||'—'},{label:'Whitelisted',val:t.isWhitelisted?'Yes':'No'},
+        ]);
+      }
+    } catch {}
+  }
+
+  // STEP 3: WHOIS
+  step++; setProgress(step/TOTAL*100,'Fetching WHOIS/RDAP data...',step,TOTAL);
+  if (optOn('opt-whois')) {
+    try {
+      const res = await fetch(`https://rdap.org/domain/${domain}`);
+      if (res.ok) {
+        const d = await res.json();
+        const events=d.events||[];
+        const ev=name=>events.find(e=>e.eventAction===name)?.eventDate?.split('T')[0]||'—';
+        const ns=(d.nameservers||[]).map(n=>n.ldhName).filter(Boolean).join(', ')||'—';
+        const reg_ent=d.entities?.find(e=>(e.roles||[]).includes('registrar'));
+        const regName=reg_ent?.vcardArray?.[1]?.find(v=>v[0]==='fn')?.[3]||reg_ent?.handle||'—';
+        showSec('secWhois');
+        document.getElementById('whoisGrid').innerHTML=infoGrid([
+          {label:'Domain',val:d.ldhName||domain,cls:'accent'},{label:'Status',val:(d.status||[]).join(', ')||'—'},
+          {label:'Registered',val:ev('registration')},{label:'Expires',val:ev('expiration')},
+          {label:'Last Updated',val:ev('last changed')},{label:'Registrar',val:regName},
+          {label:'Nameservers',val:ns},
+        ]);
+      }
+    } catch {}
+  }
+
+  // STEP 4: DNS Records
+  step++; setProgress(step/TOTAL*100,'Fetching DNS records...',step,TOTAL);
+  if (optOn('opt-dns')) {
+    try {
+      const types=[{t:1,n:'A'},{t:28,n:'AAAA'},{t:15,n:'MX'},{t:2,n:'NS'},{t:16,n:'TXT'},{t:6,n:'SOA'},{t:5,n:'CNAME'}];
+      let html='';
+      for (const dt of types) {
+        try {
+          const r=await fetch(`https://dns.google/resolve?name=${domain}&type=${dt.t}`);
+          const dd=await r.json();
+          const recs=(dd.Answer||[]).map(a=>a.data);
+          if (recs.length) html+=`<div style="margin-bottom:8px"><span style="color:var(--accent);min-width:55px;display:inline-block;font-weight:700">${dt.n}</span> ${recs.map(r=>`<span style="color:var(--text)">${r}</span>`).join('<span style="color:var(--border-glow)"> | </span>')}</div>`;
+        } catch {}
+      }
+      if (html) { showSec('secDNS'); document.getElementById('dnsList').innerHTML=html; }
+    } catch {}
+  }
+
+  // STEP 5: Subdomains via crt.sh
+  step++; setProgress(step/TOTAL*100,'Discovering subdomains via crt.sh...',step,TOTAL);
+  if (optOn('opt-sub')) {
+    try {
+      const res=await fetch(`https://crt.sh/?q=%.${domain}&output=json`);
+      if (res.ok) {
+        const data=await res.json();
+        const subs=[...new Set(data.flatMap(e=>(e.name_value||'').split('\n')).map(s=>s.trim().toLowerCase().replace(/^\*\./,'')).filter(s=>s.endsWith(domain)&&s!==domain&&!s.includes('*')))].sort();
+        showSec('secSubdomains');
+        document.getElementById('cntSub').textContent=subs.length;
+        document.getElementById('subdomainList').innerHTML=subs.length
+          ? subs.map(s=>`<span class="chip sub" title="${s}">${s}</span>`).join('')
+          : '<span style="color:var(--muted);font-size:.8rem">No subdomains in CT logs</span>';
+      }
+    } catch {}
+  }
+
+  // STEP 6: URL Parameters via Wayback Machine
+  step++; setProgress(step/TOTAL*100,'Extracting URL parameters from Wayback Machine...',step,TOTAL);
+  if (optOn('opt-param')) {
+    try {
+      const res=await fetch(`https://web.archive.org/cdx/search/cdx?url=*.${domain}&output=json&fl=original&collapse=urlkey&limit=500&matchType=prefix`);
+      if (res.ok) {
+        const data=await res.json();
+        const params=new Set();
+        data.slice(1).forEach(row=>{ try { new URL(row[0]).searchParams.forEach((v,k)=>params.add(k)); } catch {} });
+        const arr=[...params].sort();
+        showSec('secParams');
+        document.getElementById('cntParam').textContent=arr.length;
+        document.getElementById('paramList').innerHTML=arr.length
+          ? arr.map(p=>`<span class="chip param">?${p}</span>`).join('')
+          : '<span style="color:var(--muted);font-size:.8rem">No URL parameters found</span>';
+      }
+    } catch {}
+  }
+
+  // STEP 7: Technology Detection
+  step++; setProgress(step/TOTAL*100,'Detecting technologies...',step,TOTAL);
+  if (optOn('opt-tech')) {
+    const techs=new Set();
+    try {
+      const res=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://'+domain)}`);
+      if (res.ok) {
+        const data=await res.json(); const html=data.contents||'';
+        const patterns=[
+          [/wp-content|wp-includes/i,'WordPress'],[/drupal/i,'Drupal'],[/joomla/i,'Joomla'],
+          [/shopify/i,'Shopify'],[/__NEXT_DATA__/i,'Next.js'],[/__NUXT__/i,'Nuxt.js'],
+          [/ReactDOM/i,'React'],[/ng-version/i,'Angular'],[/__vue__/i,'Vue.js'],
+          [/jquery/i,'jQuery'],[/bootstrap/i,'Bootstrap'],[/tailwind/i,'Tailwind CSS'],
+          [/gtag\(|google-analytics/i,'Google Analytics'],[/fbevents\.js/i,'Facebook Pixel'],
+          [/cloudflare|__cf_bm/i,'Cloudflare'],[/laravel|csrf-token/i,'Laravel'],
+          [/csrfmiddlewaretoken/i,'Django'],[/authenticity_token/i,'Ruby on Rails'],
+          [/woocommerce/i,'WooCommerce'],[/stripe\.js/i,'Stripe'],[/paypal\.com/i,'PayPal'],
+          [/maps\.googleapis\.com/i,'Google Maps'],[/recaptcha/i,'reCAPTCHA'],
+          [/\.php/i,'PHP'],[/\.aspx/i,'ASP.NET'],[/nginx/i,'Nginx'],[/apache/i,'Apache'],
+          [/gsap|greensock/i,'GSAP'],[/swiper/i,'Swiper.js'],[/three\.js/i,'Three.js'],
+        ];
+        patterns.forEach(([re,name])=>{ if(re.test(html)) techs.add(name); });
+      }
+    } catch {}
+    // CNAME detection
+    try {
+      const cr=await fetch(`https://dns.google/resolve?name=${domain}&type=CNAME`);
+      const cd=await cr.json();
+      (cd.Answer||[]).forEach(a=>{ const v=a.data||'';
+        if(v.includes('github.io')) techs.add('GitHub Pages');
+        if(v.includes('netlify')) techs.add('Netlify');
+        if(v.includes('vercel')) techs.add('Vercel');
+        if(v.includes('cloudfront')) techs.add('AWS CloudFront');
+        if(v.includes('fastly')) techs.add('Fastly CDN');
+        if(v.includes('squarespace')) techs.add('Squarespace');
+        if(v.includes('wix')) techs.add('Wix');
+        if(v.includes('webflow')) techs.add('Webflow');
+        if(v.includes('heroku')) techs.add('Heroku');
+        if(v.includes('azurewebsites')) techs.add('Azure App Service');
+        if(v.includes('appspot')) techs.add('Google App Engine');
+      });
+    } catch {}
+    const arr=[...techs].sort();
+    showSec('secTech');
+    document.getElementById('cntTech').textContent=arr.length;
+    document.getElementById('techList').innerHTML=arr.length
+      ? arr.map(t=>`<span class="chip tech"><i class="fas fa-circle" style="font-size:6px;margin-right:4px"></i>${t}</span>`).join('')
+      : '<span style="color:var(--muted);font-size:.8rem">Could not detect (CORS restriction)</span>';
+  }
+
+  // STEP 8: HTTP Headers & Security
+  step++; setProgress(step/TOTAL*100,'Checking HTTP headers & security posture...',step,TOTAL);
+  if (optOn('opt-headers')) {
+    try {
+      const res=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://'+domain)}`);
+      if (res.ok) {
+        const data=await res.json(); const pageHtml=data.contents||'';
+        const code=data.status?.http_code; const ct=data.status?.content_type||'';
+        showSec('secHeaders');
+        const secChecks=[
+          ['Content-Security-Policy',/content-security-policy/i.test(pageHtml),'Prevents XSS attacks'],
+          ['X-Frame-Options',         /x-frame-options/i.test(pageHtml),           'Prevents clickjacking'],
+          ['X-XSS-Protection',        /x-xss-protection/i.test(pageHtml),          'XSS filter header'],
+          ['Strict-Transport-Security',/strict-transport-security/i.test(pageHtml),'Forces HTTPS (HSTS)'],
+          ['Referrer-Policy',         /referrer-policy/i.test(pageHtml),           'Controls referrer info'],
+          ['Permissions-Policy',      /permissions-policy/i.test(pageHtml),        'Controls browser features'],
+        ];
+        let html=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--border);margin-bottom:1rem">`;
+        if(code) html+=`<div style="background:var(--surface);padding:1rem"><div class="ip-info-label">HTTP Status</div><div class="ip-info-val accent2">${code}</div></div>`;
+        if(ct)   html+=`<div style="background:var(--surface);padding:1rem"><div class="ip-info-label">Content-Type</div><div class="ip-info-val">${ct}</div></div>`;
+        html+=`</div>`;
+        html+=`<div style="font-family:var(--font-mono);font-size:.78rem">`;
+        secChecks.forEach(([name,found,desc])=>{
+          html+=`<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+            <span style="color:${found?'var(--safe)':'var(--danger)'};font-size:1rem">${found? '✅':'❌'}</span>
+            <div style="flex:1"><div style="color:${found?'var(--safe)':'var(--danger)'}">${name}</div><div style="color:var(--muted);font-size:.7rem">${desc}</div></div>
+            <span style="color:var(--muted);font-size:.7rem">${found?'Present':'Missing'}</span></div>`;
+        });
+        html+=`</div>`;
+        document.getElementById('headersList').innerHTML=html;
+      }
+    } catch {}
+  }
+
+  document.getElementById('webProgress').style.display='none';
+}
+
+window.onload = checkAuth;
+</script>
+</body>
+</html>

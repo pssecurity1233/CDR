@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": "u-moacnojd",
+      "username": "pathya",
+      "password": "$2b$10$/s9Wm3bz0yNNttbZXwDkiuDVOUPtxhCJSxbkj0QtnPsD.brYntDlS",
+      "fullName": "prathamesh shelar",
+      "email": "johig93238@sixoplus.com",
+      "role": "investigator",
+      "createdAt": 1776880308217
+    }
+  ]
+}
