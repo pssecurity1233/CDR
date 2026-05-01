@@ -340,7 +340,7 @@ async function runAdvancedScan() {
   tbody.innerHTML = `<tr class="loading-row"><td colspan="8"><span class="spinner"></span>Running Advanced Forensic Scan...</td></tr>`;
   updateStats([]);
   try {
-    const res = await fetch('http://localhost:3001/api/ip-bulk', {
+    const res = await fetch('https://cdr-mvko.onrender.com/api/ip-bulk', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ips })
     });
     const data = await res.json();
@@ -447,7 +447,7 @@ async function runWebScan() {
   step++; setProgress(step/TOTAL*100,'Checking AbuseIPDB threat intelligence...',step,TOTAL);
   if (optOn('opt-threat') && resolvedIP) {
     try {
-      const res = await fetch('http://localhost:3001/api/ip-bulk', {
+      const res = await fetch('https://cdr-mvko.onrender.com/api/ip-bulk', {
         method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ips:[resolvedIP]})
       });
       const data = await res.json();

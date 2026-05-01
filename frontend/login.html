@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
@@ -10,68 +11,125 @@
     body { background: linear-gradient(135deg, #1f2937, #111827); }
   </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center text-white">
-  <div class="w-full max-w-md p-8 bg-gray-900 rounded-3xl shadow-2xl border border-gray-700">
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-red-500 tracking-widest">CDR FORENSIC</h1>
-      <p class="text-gray-400 mt-2">Cyber Crime Investigation System</p>
+
+  <!-- 🔥 Loader Overlay -->
+
+  <div id="loader" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500 mx-auto"></div>
+      <p class="mt-4 text-gray-300 text-lg">Connecting to server...</p>
     </div>
-
-    <h2 class="text-2xl font-semibold text-center mb-6">Login to Continue</h2>
-
-    <form id="loginForm" class="space-y-6">
-      <div>
-        <label class="block text-gray-400 text-sm mb-1">Username</label>
-        <input type="text" id="username" required 
-               class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-red-500 text-white">
-      </div>
-
-      <div>
-        <label class="block text-gray-400 text-sm mb-1">Password</label>
-        <input type="password" id="password" required 
-               class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-red-500 text-white">
-      </div>
-
-      <button type="submit" 
-              class="w-full py-4 bg-red-600 hover:bg-red-700 transition-all font-bold text-lg rounded-2xl">
-        LOGIN
-      </button>
-    </form>
-
-    <p class="text-center mt-6 text-gray-400">
-      Don't have an account? 
-      <a href="register.html" class="text-red-500 hover:underline font-medium">Register Here</a>
-    </p>
   </div>
 
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+  <!-- 🔐 Login Card -->
 
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
+  <div class="w-full max-w-md p-8 bg-gray-900 rounded-3xl shadow-2xl border border-gray-700">
+
+```
+<div class="text-center mb-8">
+  <h1 class="text-4xl font-bold text-red-500 tracking-widest">CDR FORENSIC</h1>
+  <p class="text-gray-400 mt-2">Cyber Crime Investigation System</p>
+</div>
+
+<h2 class="text-2xl font-semibold text-center mb-6">Login to Continue</h2>
+
+<form id="loginForm" class="space-y-6">
+  
+  <div>
+    <label class="block text-gray-400 text-sm mb-1">Username</label>
+    <input type="text" id="username" required
+      class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-red-500 text-white">
+  </div>
+
+  <div>
+    <label class="block text-gray-400 text-sm mb-1">Password</label>
+    <input type="password" id="password" required
+      class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-red-500 text-white">
+  </div>
+
+  <button id="loginBtn" type="submit"
+    class="w-full py-4 bg-red-600 hover:bg-red-700 transition-all font-bold text-lg rounded-2xl">
+    LOGIN
+  </button>
+
+</form>
+
+<p class="text-center mt-6 text-gray-400">
+  Don't have an account?
+  <a href="register.html" class="text-red-500 hover:underline font-medium">Register Here</a>
+</p>
+```
+
+  </div>
+
+  <!-- ⚡ Script -->
+
+  <script>
+    const API_BASE = "https://cdr-mvko.onrender.com";
+
+    const loader = document.getElementById("loader");
+    const loginBtn = document.getElementById("loginBtn");
+
+    function showLoader() {
+      loader.classList.remove("hidden");
+      loginBtn.disabled = true;
+      loginBtn.innerText = "Please wait...";
+    }
+
+    function hideLoader() {
+      loader.classList.add("hidden");
+      loginBtn.disabled = false;
+      loginBtn.innerText = "LOGIN";
+    }
+
+    // 🔥 Warm-up backend (Render sleep fix)
+    fetch(`${API_BASE}/api/health`).catch(() => {});
+
+    async function loginUser(username, password, retries = 3) {
+      showLoader();
 
       try {
-        const res = await fetch('http://localhost:3001/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password })
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          alert("Login Successful! Welcome to CDR Forensic");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
+
+          alert("✅ Login Successful!");
           window.location.href = "index.html";
         } else {
           alert(data.error || "Login failed");
+          hideLoader();
         }
+
       } catch (err) {
-        alert("Backend se connect nahi ho raha. Server chal raha hai?");
+        if (retries > 0) {
+          console.log(`Retrying... (${retries})`);
+          setTimeout(() => loginUser(username, password, retries - 1), 3000);
+        } else {
+          alert("❌ Server slow hai (Render sleep). 30 sec baad try karo.");
+          hideLoader();
+        }
       }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      loginUser(username, password);
     });
   </script>
+
 </body>
 </html>
